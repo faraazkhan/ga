@@ -10,7 +10,7 @@ module LS
       end
 
       def push(event, property_id=nil)
-        events << renderer_for_event(event, property_id)
+        @events << renderer_for_event(event, property_id)
       end
 
       def to_s
@@ -30,7 +30,7 @@ module LS
         end
       end
     end
+    DL = LS::GoogleAnalytics::DataLayer
   end
 end
 
-DATA_LAYER = LS::GoogleAnalytics::DataLayer

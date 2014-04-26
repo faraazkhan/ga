@@ -1,4 +1,6 @@
 require "ls/google_analytics/version"
+require "ls/google_analytics/data_layer"
+require "ls/google_analytics/events"
 
 module LS
   module GoogleAnalytics
@@ -25,11 +27,10 @@ module LS
       @@script = script
     end
 
-    GA = GoogleAnalytics
-
-    if defined?(Rails)
-      require 'ls/google_analytics/rails/railtie'
-      GAR = GoogleAnalytics::Rails
-    end
+  end
+  GA = GoogleAnalytics
+  if defined?(Rails)
+    require 'ls/google_analytics/rails/railtie'
+    GAR = GoogleAnalytics::Rails
   end
 end
