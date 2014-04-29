@@ -16,8 +16,7 @@ module LS
       def to_s
         <<-JAVASCRIPT
         <script type="text/javascript">
-         var push = true;
-         console.log(push);
+        dataLayer = [{}];
         </script>
         JAVASCRIPT
       end

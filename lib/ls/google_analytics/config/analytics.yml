@@ -1,0 +1,15 @@
+common: &common
+  domain: livingsocial.com
+  inorganic_source: google.com
+
+development:
+  PROPERTY_ID: GTM-W8PFGK
+  <<: *common
+
+test:
+  PROPERTY_ID: UA-123456
+  <<: *common
+
+production:
+  PROPERTY_ID: UA-456788
+  <<: *common

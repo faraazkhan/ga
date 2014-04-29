@@ -1,10 +1,10 @@
 module LS
   module GoogleAnalytics
     class Event
-      attr_reader :name, :params
-      def initialize(name, *params)
+      attr_reader :name, :options
+      def initialize(options, name)
         @name = name
-        @params = params
+        @options = options
       end
     end
   end

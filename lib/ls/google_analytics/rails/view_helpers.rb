@@ -79,46 +79,13 @@ module LS
         #
         # @return [String] a `<script>` tag, containing the analytics initialization sequence.
         #
-        def analytics_init(options = {})
-          unless tracker = options.delete(:tracker).presence
-            tracker = LS::GA.tracker
-            raise ArgumentError, "Tracker must be set! Did you set LS::GA.tracker ?" unless tracker
-          end
+        def analytics_init(opts = {})
+          LS::GA.script.html_safe
+        end
 
-          local = options.delete(:local) || false
-          anonymize = options.delete(:anonymize) || false
-          custom_vars = options.delete(:custom_vars) || []
-          custom_vars = [custom_vars] unless custom_vars.is_a?(Array)
-          link_attribution = options.delete(:enhanced_link_attribution) || false
-          domain = options.delete(:domain) || (local ? "none" : "auto")
-          events = options.delete(:add_events) || []
-          events = [events] unless events.is_a?(Array)
-
-          queue = DL.new
-
-          # unshift => reverse order
-          events.unshift LS::GA::Events::TrackPageview.new(options[:page])
-          # anonymize if needed before tracking the page view
-          events.unshift LS::GA::Events::AnonymizeIp.new if anonymize
-          # custom_var if needed before tracking the page view
-          custom_vars.each do |custom_var|
-            events.unshift custom_var
-          end
-          events.unshift LS::GA::Events::SetDomainName.new(domain)
-          if local
-            events.unshift LS::GA::Events::SetAllowLinker.new(true)
-          end
-          events.unshift LS::GA::Events::SetAccount.new(tracker)
-          events.unshift LS::GA::Events::Require.new(
-            'inpage_linkid',
-            '//www.google-analytics.com/plugins/ga/inpage_linkid.js'
-          ) if link_attribution
-
-          events.each do |event|
-            queue << event
-          end
-
-          queue.to_s.html_safe
+        def analytics_send(options, event_name=nil)
+          event = LS::GA::Event.new(options, event_name)
+          analytics_render_event(event)
         end
 
         # Track a custom event
@@ -165,7 +132,7 @@ module LS
 
         def analytics_render_event(event)
           raise ArgumentError, "Tracker must be set! Did you set LS::GA.tracker ?" unless LS::GA.valid_tracker?
-          LS::GA::EventRenderer.new(event, nil).to_s.html_safe
+          LS::GA::EventRenderer.new(event).to_s.html_safe
         end
       end
     end
